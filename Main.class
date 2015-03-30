@@ -1,0 +1,108 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
+
+/**
+ * Created by edwinfinch on 15-03-30.
+ */
+public class Main {
+    static private FileReader reader;
+    static private BufferedReader b_reader;
+    static String FILE = "DATA40.txt";
+
+    static String numbers[] = {
+            "No such concept", "ook", "ook ook", "oog", "ooga", "ug", "mook", "mook mook", "oogam", "oogum", "ug ug"
+    };
+    static String exceptions[][] = {
+            {
+                    "", ""
+            },
+            {
+                    "", "N/A"
+            },
+            {
+                    "", "am", "a", "um"
+            },
+            {
+                    "", "am"
+            },
+            {
+                    "", "N/A"
+            },
+            {
+                    "", "N/A"
+            },
+            {
+                    "", "N/A"
+            },
+            {
+                    "", "N/A"
+            },
+            {
+                    "", "N/A"
+            },
+            {
+                    "", "N/A"
+            },
+            {
+                    "", "N/A"
+            }
+    };
+
+    static boolean DEBUG = true;
+
+    static public void debug(String string){
+        if(DEBUG){
+            System.out.println(string);
+        }
+    }
+
+    static public void main(String arguments[]) {
+        try {
+            reader = new FileReader(FILE);
+            b_reader = new BufferedReader(reader);
+            String strings[] = new String[10];
+            int count = 0;
+            String line;
+            while ((line = b_reader.readLine()) != null) {
+                strings[count] = line;
+                //debug(strings[count]);
+                count++;
+            }
+            debug("amount of lines " + count);
+            String words[][] = new String[count][50];
+            for(int i = 0; i < count; i++){
+                debug("i count " + i);
+                int i2 = 0;
+                while(strings[i].length() > 0) {
+                    String temp = strings[i];
+                    if(strings[i].length() > 5) {
+                        temp = strings[i].substring(0, 5);
+                    }
+                    int tempcount = 0, contains = -1;
+                    while(!temp.contains(numbers[tempcount])){
+                        tempcount++;
+                        for(int i3 = 0; i3 < exceptions[tempcount].length; i3++) {
+                            if(temp.length()-numbers[tempcount].length() > 0) {
+                                if (temp.substring(numbers[tempcount].length()).contains(exceptions[tempcount][i3])) {
+                                    debug("contains: " + exceptions[tempcount][i3]);
+                                    contains = i3;
+                                }
+                            }
+                        }
+                    }
+                    if(contains < 0) {
+                        words[i][i2] = numbers[tempcount];
+                    }
+                    else{
+                        words[i][i2] = numbers[tempcount] + exceptions[tempcount][contains];
+                    }
+                    debug(words[i][i2]);
+                    strings[i] = strings[i].substring(words[i][i2].length());
+                }
+            }
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+}
